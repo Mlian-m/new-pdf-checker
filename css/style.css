@@ -1,0 +1,114 @@
+.container {
+    width: auto;
+    max-width: 1400px;
+    padding: 0 15px;
+}
+
+.footer {
+    background-color: #f5f5f5;
+}
+::selection {    
+	background-color: #ffe000;
+	color: #0c0c0c;
+}
+.bd-placeholder-img {
+	 font-size: 1.125rem;
+	 text-anchor: middle;
+	 -webkit-user-select: none;
+	 -moz-user-select: none;
+	 -ms-user-select: none;
+	 user-select: none;
+}
+ #output_en, #output_fr {
+	 padding: 20px;
+	 background: #006;
+	 color: white;
+	 font-size: 19px;
+	 margin-top: 10px;
+	 word-break: break-all;
+	 border: 12px solid #00088c;
+}
+.d-flex.flex-column.h-100 {
+	background: #243a74;
+	background-repeat: no-repeat;
+	background-position: left bottom;
+/*	background-image: url(http://mili.me/pdf/img/logo-bg.png); */
+}
+ .footer {
+	 background-color: #000666 !important;
+	 border-top: 10px solid #fdb713;
+}
+ #output_en-info strong, #output_fr-info strong {
+	 color: white;
+	 background: #014ec9;
+	 padding: 0px 5px;
+	 border-radius: 5px;
+}
+ #output_en-info, #output_fr-info {
+	 font-size: 20px;
+}
+ @media (min-width: 768px) {
+	 .bd-placeholder-img-lg {
+		 font-size: 3.5rem;
+	}
+}
+/* copy section */
+.btn-copy {
+	border: 12px solid #00088c;
+	background: #006;
+	color:white;
+	width:100%;
+	padding-top: 25px;
+	padding-bottom: 20px;
+	text-align:center;
+}
+.btn-copy:hover {color:white;}
+.buttonwide:hover {
+	background: #00088c;
+}
+
+.buttonwide {
+	text-transform: uppercase;
+	background: #1e5fb3;
+	border: none;
+	color: white;
+	padding: 10px;
+	margin-bottom: 40px;
+	/* width:100%; */ /* Removed fixed width */
+}
+.left-sidebar {
+margin-top: 33px;
+}
+textarea#clickme {
+	cursor: pointer;
+}
+
+/* Style for the new Title Case textarea */
+textarea#titlecase-input {
+    border: 12px solid #00088c;
+    background: #eee; /* Lighter background than output */
+    color: #333;
+    padding: 10px;
+	margin-bottom: 0; /* Remove default margin */
+}
+
+.right-sidebar button#submit {
+	background: #1e5fb3;
+	border: none;
+	color: white;
+	text-transform: uppercase;
+	width: 100%;
+	padding: 10px;
+}
+.right-sidebar button#submit:hover {
+	background: #00088c;
+}
+.card {
+	border: 1px solid #518fe0;
+}
+.card-body {
+	padding-top: 10px;
+}
+.right-sidebar fieldset.p-3 {
+	background: transparent !important;
+}
