@@ -16,7 +16,7 @@
     <!-- Custom styles for this template -->
     <link href="css/style.css" rel="stylesheet">
 </head>
-<body class="d-flex flex-column h-100">
+<body class="mainContainer d-flex flex-column h-100" spellcheck="false">
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0 align-middle">
     <div class="container">
@@ -24,20 +24,20 @@
 			<div class="row">
 
 				<div class="col-sm-6 left-sidebar">
-					<textarea class="btn-copy" id="clickme">HIT ME FOR FOOTNOTE CODE</textarea>
-					<button class="buttonwide" onclick="copyFootnote()">Copy footnote</button> 
+					<textarea class="btn-copy" id="clickme">CLICK HERE FOR FOOTNOTE CODE</textarea>
+					<button class="buttonwide" onclick="copyFootnote(this)">Copy footnote</button>
 
 					<textarea class="btn-copy" id="en-tag"><span lang="en" xml:lang="en"></textarea>
-					<button class="buttonwide" onclick="copyEnglishLang()">Copy English tag</button>
+					<button class="buttonwide" onclick="copyEnglishLang(this)">Copy English tag</button>
 
 					<textarea class="btn-copy" id="fr-tag"><span lang="fr" xml:lang="fr"></textarea>
-					<button class="buttonwide" onclick="copyFrenchLang()">Copy French tag</button>
+					<button class="buttonwide" onclick="copyFrenchLang(this)">Copy French tag</button>
 
 					<!-- Title Case Tool -->
 					<textarea class="form-control mt-4" id="titlecase-input" rows="3" placeholder="Paste text here to convert..."></textarea>
 					<div class="button-group d-flex justify-content-between mt-1">
-						<button class="buttonwide mr-1" id="titlecase-button" style="width: 49%; margin-bottom: 40px;">Title Case</button>
-						<button class="buttonwide ml-1" id="lowercase-button" style="width: 49%; margin-bottom: 40px;">lowercase</button>
+						<button class="button-half mr-1" id="titlecase-button">Title Case</button>
+						<button class="button-half ml-1" id="lowercase-button">lowercase</button>
 					</div>
 				</div>
 
@@ -60,15 +60,17 @@
 									</div>
 								</fieldset>
 								<fieldset class="p-3 mt-5 bg-light" style="border: 1px solid black;">
-									<legend class="w-auto">English</legend>						                        <div class="" id="output_en-info">                        </div>						
-									<div class="" id="output_en">						
+									<legend class="w-auto">English</legend>										<div class="" id="output_en-info">                        </div>						
+									<div class="" id="output_en" style="position: relative;">
+										<span class="copy-output-button" title="Copy content">&#x1F4CB;</span> <!-- Clipboard icon -->
 									</div>
 								</fieldset>
 
 
 								<fieldset class="p-3 mt-5 bg-light" style="border: 1px solid black;">
-									<legend class="w-auto">Fran&ccedil;ais</legend>						                        <div class="" id="output_fr-info">                        </div>						
-									<div class="" id="output_fr">
+									<legend class="w-auto">Fran&ccedil;ais</legend>										<div class="" id="output_fr-info">                        </div>						
+									<div class="" id="output_fr" style="position: relative;">
+										<span class="copy-output-button" title="Copy content">&#x1F4CB;</span> <!-- Clipboard icon -->
 									</div>
 								</fieldset>
 							</form>
@@ -91,24 +93,48 @@
 	};
 
 	// for copy button of footnote: 
-	function copyFootnote() {
+	function copyFootnote(button) {
 		var copyTxt = document.getElementById("clickme");
 		copyTxt.select();
 		document.execCommand("copy");
+		// Add feedback
+		const originalText = button.innerText;
+		button.innerText = "Copied!";
+		button.disabled = true;
+		setTimeout(() => {
+			button.innerText = originalText;
+			button.disabled = false;
+		}, 1500);
 	};
 
 	// for copy English lang tag: 
-	function copyEnglishLang() {
+	function copyEnglishLang(button) {
 		var copyTxt = document.getElementById("en-tag");
 		copyTxt.select();
 		document.execCommand("copy");
+		// Add feedback
+		const originalText = button.innerText;
+		button.innerText = "Copied!";
+		button.disabled = true;
+		setTimeout(() => {
+			button.innerText = originalText;
+			button.disabled = false;
+		}, 1500);
 	};
 
 	// for copy French lang tag: 
-	function copyFrenchLang() {
+	function copyFrenchLang(button) {
 		var copyTxt = document.getElementById("fr-tag");
 		copyTxt.select();
 		document.execCommand("copy");
+		// Add feedback
+		const originalText = button.innerText;
+		button.innerText = "Copied!";
+		button.disabled = true;
+		setTimeout(() => {
+			button.innerText = originalText;
+			button.disabled = false;
+		}, 1500);
 	};
 
 	// --- Title Case Conversion Function --- 
@@ -200,6 +226,68 @@
         } else {
             console.error('Could not find Lowercase button or input area.');
         }
+
+        // --- Attach Copy Button Listener (Delegated) ---
+        $('body').on('click', '.copy-output-button', function(event) {
+            const button = $(this);
+            const outputDiv = button.parent(); // Get the parent (#output_en or #output_fr)
+            const textToCopy = outputDiv.attr('data-copy-text'); 
+
+            if (textToCopy && navigator.clipboard) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    // Success!
+                    console.log('Copied to clipboard:', textToCopy);
+                    const originalContent = button.html();
+                    button.html('&#x2705;'); // Checkmark icon
+                    button.addClass('copied');
+
+                    // Reset after a delay
+                    setTimeout(() => {
+                        button.html(originalContent);
+                        button.removeClass('copied');
+                    }, 1500); // Reset after 1.5 seconds
+
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy text. See console for details.');
+                });
+            } else if (!navigator.clipboard) {
+                 alert('Clipboard API not available in this browser.');
+            } else {
+                console.error('Could not find text to copy from data-copy-text attribute.');
+            }
+        });
+
+        // --- Attach Special Char Copy Listener (Delegated) ---
+        $('body').on('click', '.copy-special-char', function(event) {
+            const button = $(this);
+            // Get the raw attribute value to avoid entity decoding
+            const codeToCopy = button.get(0).getAttribute('data-copy-code'); 
+            const originalText = button.text(); // Store original text
+
+            if (codeToCopy && navigator.clipboard) {
+                navigator.clipboard.writeText(codeToCopy).then(() => {
+                    // Success!
+                    console.log('Copied special character code:', codeToCopy);
+                    button.text('Copied!'); // Simple text feedback
+                    button.prop('disabled', true); // Briefly disable
+
+                    // Reset after a delay
+                    setTimeout(() => {
+                        button.text(originalText);
+                        button.prop('disabled', false);
+                    }, 1500); // Reset after 1.5 seconds
+
+                }).catch(err => {
+                    console.error('Failed to copy special char code: ', err);
+                    alert('Failed to copy text. See console for details.');
+                });
+            } else if (!navigator.clipboard) {
+                 alert('Clipboard API not available in this browser.');
+            } else {
+                console.error('Could not find code to copy from data-copy-code attribute.');
+            }
+        });
 
         $("#submit").click(function (e) {
             e.preventDefault();
@@ -326,9 +414,10 @@
                          displayStringEn = displayStringEn.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                          displayStringFr = displayStringFr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-                         // Use .html() with the fully escaped string
-                         $("#output_en").html(displayStringEn);
-                         $("#output_fr").html(displayStringFr);
+                         // Use .html() with the fully escaped string for display
+                         // Store the full HTML string in data-copy-text
+                         $("#output_en").attr('data-copy-text', rawImgTag + rawInfoEn).html(displayStringEn + '<span class="copy-output-button" title="Copy content">&#x1F4CB;</span>');
+                         $("#output_fr").attr('data-copy-text', rawImgTag + rawInfoFr).html(displayStringFr + '<span class="copy-output-button" title="Copy content">&#x1F4CB;</span>');
                          
                     } else if (!pageCountError && !fileSizeError && numPages === 0) {
                         // Handle case where PDF technically loads but has 0 pages
@@ -352,7 +441,7 @@
         });		
     });
 </script>
-
+		
 <!-- script for lower PDF fetch part -->
 <script type="module"> 
     // Import PDF.js library using ES module syntax
@@ -461,6 +550,68 @@
             console.error('Could not find Lowercase button or input area.');
         }
 
+        // --- Attach Copy Button Listener (Delegated) ---
+        $('body').on('click', '.copy-output-button', function(event) {
+            const button = $(this);
+            const outputDiv = button.parent(); // Get the parent (#output_en or #output_fr)
+            const textToCopy = outputDiv.attr('data-copy-text'); 
+
+            if (textToCopy && navigator.clipboard) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    // Success!
+                    console.log('Copied to clipboard:', textToCopy);
+                    const originalContent = button.html();
+                    button.html('&#x2705;'); // Checkmark icon
+                    button.addClass('copied');
+
+                    // Reset after a delay
+                    setTimeout(() => {
+                        button.html(originalContent);
+                        button.removeClass('copied');
+                    }, 1500); // Reset after 1.5 seconds
+
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy text. See console for details.');
+                });
+            } else if (!navigator.clipboard) {
+                 alert('Clipboard API not available in this browser.');
+            } else {
+                console.error('Could not find text to copy from data-copy-text attribute.');
+            }
+        });
+
+        // --- Attach Special Char Copy Listener (Delegated) ---
+        $('body').on('click', '.copy-special-char', function(event) {
+            const button = $(this);
+            // Get the raw attribute value to avoid entity decoding
+            const codeToCopy = button.get(0).getAttribute('data-copy-code'); 
+            const originalText = button.text(); // Store original text
+
+            if (codeToCopy && navigator.clipboard) {
+                navigator.clipboard.writeText(codeToCopy).then(() => {
+                    // Success!
+                    console.log('Copied special character code:', codeToCopy);
+                    button.text('Copied!'); // Simple text feedback
+                    button.prop('disabled', true); // Briefly disable
+
+                    // Reset after a delay
+                    setTimeout(() => {
+                        button.text(originalText);
+                        button.prop('disabled', false);
+                    }, 1500); // Reset after 1.5 seconds
+
+                }).catch(err => {
+                    console.error('Failed to copy special char code: ', err);
+                    alert('Failed to copy text. See console for details.');
+                });
+            } else if (!navigator.clipboard) {
+                 alert('Clipboard API not available in this browser.');
+            } else {
+                console.error('Could not find code to copy from data-copy-code attribute.');
+            }
+        });
+
         $("#submit").click(function (e) {
             e.preventDefault();
             const pdfUrl = $("#pdf_link").val();
@@ -586,9 +737,10 @@
                          displayStringEn = displayStringEn.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                          displayStringFr = displayStringFr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-                         // Use .html() with the fully escaped string
-                         $("#output_en").html(displayStringEn);
-                         $("#output_fr").html(displayStringFr);
+                         // Use .html() with the fully escaped string for display
+                         // Store the full HTML string in data-copy-text
+                         $("#output_en").attr('data-copy-text', rawImgTag + rawInfoEn).html(displayStringEn + '<span class="copy-output-button" title="Copy content">&#x1F4CB;</span>');
+                         $("#output_fr").attr('data-copy-text', rawImgTag + rawInfoFr).html(displayStringFr + '<span class="copy-output-button" title="Copy content">&#x1F4CB;</span>');
                          
                     } else if (!pageCountError && !fileSizeError && numPages === 0) {
                         // Handle case where PDF technically loads but has 0 pages
@@ -619,6 +771,12 @@
 <footer class="footer mt-auto py-3">
     <div class="container">
         <span class="text-muted"></span>
+        <div class="special-chars-container mt-2 text-center">
+            <small class="text-light d-block mb-1">Copy Special Characters:</small>
+            <button class="btn btn-sm btn-outline-light mr-2 copy-special-char" data-copy-code="&amp;#8209;">non-breaking hyphen &#8209;</button>
+            <button class="btn btn-sm btn-outline-light mr-2 copy-special-char" data-copy-code="&amp;#8212;">em dash &mdash;</button>
+            <!-- Add more buttons here as needed -->
+        </div>
     </div>
 </footer>
 </body>

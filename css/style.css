@@ -26,17 +26,19 @@
 	 font-size: 19px;
 	 margin-top: 10px;
 	 word-break: break-all;
-	 border: 12px solid #00088c;
 }
 .d-flex.flex-column.h-100 {
-	background: #243a74;
-	background-repeat: no-repeat;
-	background-position: left bottom;
-/*	background-image: url(http://mili.me/pdf/img/logo-bg.png); */
+	/* Fallback solid color */
+	background-color: #243a74;
+	/* Cool Blue Gradient */
+	background-image: radial-gradient(ellipse at top, #005caa 0, #050b1e 100%);
+	/* Ensure gradient covers the full height */
+	background-attachment: fixed; 
 }
  .footer {
-	 background-color: #000666 !important;
-	 border-top: 10px solid #fdb713;
+	 background-color: #050b1e; /* Match bottom of body gradient */
+	 border-top: 1px solid #2a4a8b; /* Subtle top border */
+	 color: #ccc; /* Lighter text color for contrast */
 }
  #output_en-info strong, #output_fr-info strong {
 	 color: white;
@@ -54,8 +56,8 @@
 }
 /* copy section */
 .btn-copy {
-	border: 12px solid #00088c;
-	background: #006;
+	border: none;
+    background: #0e0e48;
 	color:white;
 	width:100%;
 	padding-top: 25px;
@@ -69,13 +71,32 @@
 
 .buttonwide {
 	text-transform: uppercase;
-	background: #1e5fb3;
-	border: none;
+    background: transparent;
+    border: 1px solid #ffffff4d !important;
+    border-radius: 5px;
 	color: white;
 	padding: 10px;
 	margin-bottom: 40px;
-	/* width:100%; */ /* Removed fixed width */
+	width: 100%;
 }
+
+/* New class for side-by-side buttons */
+.button-half {
+	text-transform: uppercase;
+    background: transparent;
+    border: 1px solid #ffffff4d !important;
+    border-radius: 5px;
+	color: white;
+	padding: 10px;
+	margin-bottom: 40px;
+	/* No width: 100% */
+	flex-grow: 1; /* Allow buttons to grow in flex container */
+}
+
+.button-half:hover {
+	background: #00088c;
+}
+
 .left-sidebar {
 margin-top: 33px;
 }
@@ -85,7 +106,6 @@ textarea#clickme {
 
 /* Style for the new Title Case textarea */
 textarea#titlecase-input {
-    border: 12px solid #00088c;
     background: #eee; /* Lighter background than output */
     color: #333;
     padding: 10px;
@@ -111,4 +131,25 @@ textarea#titlecase-input {
 }
 .right-sidebar fieldset.p-3 {
 	background: transparent !important;
+}
+
+/* Styles for the output copy button */
+.copy-output-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    cursor: pointer;
+    font-size: 20px; /* Adjust size as needed */
+    opacity: 0.7;
+    transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.copy-output-button:hover {
+    opacity: 1;
+}
+
+/* Style for the copied state */
+.copy-output-button.copied {
+    color: #28a745; /* Bootstrap success green */
+    opacity: 1;
 }
